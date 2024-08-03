@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+#
+# You should only work under the /scratch/users/<username> directory.
+#
+# Example job submission script
+#
+# -= Resources =-
+#
+#SBATCH --job-name=mandelbrot-jobs
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=16
+#SBATCH --partition=shorter
+#SBATCH --time=00:05:00
+#SBATCH --output=mandelbrot-jobs.out
+
+################################################################################
+##################### !!! DO NOT EDIT ABOVE THIS LINE !!! ######################
+################################################################################
+# Set stack size to unlimited
+echo "Setting stack size to unlimited..."
+ulimit -s unlimited
+ulimit -l unlimited
+ulimit -a
+
+echo "Loading GCC 11..."
+module load gcc/11.2.0
+
+echo
+
+echo "Running Job...!"
+echo "==============================================================================="
+echo "Running compiled binary..."
+
+compile_and_run() {
+
+  local thread_count="$1"
+  local schedule_type="$2"  # Added parameter for schedule type
+  local output_file="output_${thread_count}th_${schedule_type}.txt"
+
+  echo "Running with $thread_count thread(s) and schedule type: $schedule_type"
+  export OMP_NUM_THREADS=$thread_count
+  export OMP_SCHEDULE=$schedule_type  # Set the OpenMP schedule type
+
+  make run | tee "$output_file"
+
+  # Extract elapsed time and append it to the final output file
+  elapsed_time=$(grep "real" "$output_file" | awk '{print $2}')
+  echo "Threads: $thread_count, Schedule: $schedule_type, Elapsed Time: $elapsed_time" >> "$final_output_file"
+}
+
+# Array of thread counts
+thread_counts=(1 2 4 8 16 32)
+
+# Array of OpenMP schedule types to test
+schedule_types=("static" "dynamic" "dynamic,10" "dynamic,100")  # Adjust chunk sizes as needed
+
+final_output_file="final_output.txt"
+
+# Create an empty final output file
+echo "" > "$final_output_file"
+
+for thread_count in "${thread_counts[@]}"; do
+  for schedule_type in "${schedule_types[@]}"; do
+    compile_and_run "$thread_count" "$schedule_type"
+  done
+done
+
+echo "Automation completed!"

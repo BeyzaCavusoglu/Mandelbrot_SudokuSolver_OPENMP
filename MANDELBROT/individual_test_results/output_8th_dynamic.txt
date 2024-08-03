@@ -1,0 +1,26 @@
+g++ -Wall -Werror -W -Wextra -DKUACC main.cpp mandelbrot.cpp -fopenmp  -o ./mandelbrot
+./mandelbrot
+Starting Test (zoom_in_test_mixed)
+	Duration for zoom_in at (469, 311): 3060 ms
+	Duration for zoom_in at (560, 685): 2211 ms
+	Duration for zoom_in at (924, 557): 1788 ms
+	Duration for zoom_in at (787, 581): 3808 ms
+Finished test ( zoom_in_test_mixed) in: 10869 ms
+Saved result to file (zoom_in_test_mixed.ppm)
+===============================================
+Starting Test (zoom_in_test_all_white)
+	Duration for zoom_in at (0, 0): 317 ms
+	Duration for zoom_in at (0, 0): 287 ms
+	Duration for zoom_in at (0, 0): 297 ms
+	Duration for zoom_in at (0, 0): 288 ms
+Finished test ( zoom_in_test_all_white) in: 1191 ms
+Saved result to file (zoom_in_test_all_white.ppm)
+===============================================
+Starting Test (zoom_in_test_all_black)
+	Duration for zoom_in at (500, 500): 5382 ms
+	Duration for zoom_in at (500, 500): 5679 ms
+	Duration for zoom_in at (500, 500): 5868 ms
+	Duration for zoom_in at (500, 500): 5717 ms
+Finished test ( zoom_in_test_all_black) in: 22649 ms
+Saved result to file (zoom_in_test_all_black.ppm)
+===============================================
